@@ -108,9 +108,12 @@ type GetServiceOptions struct {
 }
 
 // GetService gets details about an existing service.
-func (c *Client) GetService(id string, o GetServiceOptions) (*Service, error) {
+func (c *Client) GetService(id string, o *GetServiceOptions) (*Service, error) {
 	v, err := query.Values(o)
 	resp, err := c.get("/services/" + id + "?" + v.Encode())
+	if resp.StatusCode == 404 {
+		fmt.Println("This service id could not be found. Please ensure that you are using the correct id and the service exists.")
+	}
 	return getServiceFromResponse(c, resp, err)
 }
 
